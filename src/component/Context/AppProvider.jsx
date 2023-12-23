@@ -23,12 +23,13 @@ export default function AppProvider({ children }) {
   const { userInfo: { uid } } = useContext(AuthContext);
   const [selectedRoomId, setSelectedRoomId] = useState('');
   const [isInviteMemberModal, setIsInviteMemberModal] = useState(false);
-  // const key = CryptoJS.lib.WordArray.random(16); // Key có độ dài 128 bits (16 bytes)
-  // const iv = CryptoJS.lib.WordArray.random(16); //IV cũng có độ dài 128 bits (16 bytes)    
-  // const { key, iv } = generateKeyAndIV();
-  const key = CryptoJS.enc.Hex.parse('00112233445566778899AABBCCDDEEFF');
-  const iv = CryptoJS.enc.Hex.parse('0102030405060708');
-  console.log({key, iv});
+  const key2 = CryptoJS.lib.WordArray.random(16); // Key có độ dài 128 bits (16 bytes)
+  const iv2 = CryptoJS.lib.WordArray.random(16); //IV cũng có độ dài 128 bits (16 bytes)    
+  // const { key2, iv2 } = generateKeyAndIV();
+  console.log("Here:", key2, iv2);
+  // const key = CryptoJS.enc.Hex.parse('00112233445566778899AABBCCDDEEFF');
+  // const iv = CryptoJS.enc.Hex.parse('0102030405060708');
+  // console.log("Day nha: ",key, iv);
   // const secretKey = generateRandomKey();
   // console.log('Random Key:', secretKey);
   const roomsCondition = useMemo(() => {
@@ -70,9 +71,11 @@ export default function AppProvider({ children }) {
       selectedRoom, members,
       isInviteMemberModal,
       setIsInviteMemberModal,
-      key,
-      iv,
-      encryptData
+      // key,
+      // iv,
+      encryptData,
+      key2,
+      iv2,
     }}>
       {children}
     </AppContext.Provider>

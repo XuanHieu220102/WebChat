@@ -34,8 +34,10 @@ function formatDate(seconds) {
     }
     return formattedDate;
   }
-export default function Message({ text, displayName, createAt, photoURL }) {
-    const {key, iv} = useContext(AppContext);
+export default function Message({ text, displayName, createAt, photoURL, key22, iv22}) {
+    // const {key, iv, key2, iv2} = useContext(AppContext);
+        const keyWordArray  = CryptoJS.lib.WordArray.create(JSON.parse(key22))
+        const ivWordArray = CryptoJS.lib.WordArray.create(JSON.parse(iv22));
       const decryptData = (encryptedData, key, iv) => {
         const decrypted = CryptoJS.AES.decrypt(encryptedData.toString(), key, { iv });
         return decrypted.toString(CryptoJS.enc.Utf8).slice(1,-1);
@@ -48,7 +50,7 @@ export default function Message({ text, displayName, createAt, photoURL }) {
                 <Typography.Text className='date' >{formatDate(createAt?.seconds)}</Typography.Text>
             </div>
             <div>
-                <Typography.Text className='content'>{decryptData(text, key, iv)}</Typography.Text>
+                <Typography.Text className='content'>{decryptData(text, keyWordArray.words, ivWordArray.words)}</Typography.Text>
             </div>
         </WrapperStyled>
     )
