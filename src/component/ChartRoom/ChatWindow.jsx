@@ -8,6 +8,7 @@ import { addDocument } from '../../firebase/service';
 import { AuthContext } from '../Context/AuthProvider';
 import { useForm } from 'antd/es/form/Form';
 import { useFirestore } from '../../hook/useFirestore';
+import CryptoJS from 'crypto-js';
 const HeaderStyle = styled.div`
   display: flex;
   justify-content: space-between;
@@ -103,7 +104,7 @@ const MessageListStyled = styled.div`
 `;
 
 export default function ChatWindow() {
-  const {selectedRoom, members, setIsInviteMemberModal, key, iv, encryptData  } = useContext(AppContext);
+  const {selectedRoom, members, setIsInviteMemberModal, key, iv, encryptData, key2, iv2  } = useContext(AppContext);
   // console.log({members});
   const [inputValue, setInputValue] = useState('');
   const messageListRef = useRef(null);
@@ -115,15 +116,17 @@ export default function ChatWindow() {
   const handleInputChange = (e) => {
     setInputValue(e.target.value)
   }
-
   const handleOnSubmit = () => {
-    console.log("Wd: ", {key, iv});
+    const keyJS = JSON.stringify(key2);
+    const ivJS = JSON.stringify(iv2);
     addDocument('messages', {
-      text: encryptData(inputValue, key, iv),
+      text: encryptData(inputValue, key2, iv2),
       uid,
       photoURL,
       roomId: selectedRoom.id,
-      displayName
+      displayName,
+      key: keyJS,
+      iv:ivJS,
     });
     form.resetFields(['message'])
   }
@@ -138,8 +141,11 @@ export default function ChatWindow() {
   );
 
   const messages = useFirestore('messages', condition);
-  // console.log(messages);  
-
+  console.log(messages);  
+  // const keyWordArray = CryptoJS.lib.WordArray.create(JSON.parse(messages[0].key));
+  // const ivWordArray = CryptoJS.lib.WordArray.create(JSON.parse(messages[0].iv));
+  // console.log("1223123",keyWordArray);
+  // console.log("21313",ivWordArray);
   useEffect(() => {
     // scroll to bottom after message changed
     if (messageListRef?.current) {
@@ -175,11 +181,13 @@ export default function ChatWindow() {
       <MessageListStyled ref={messageListRef} >
               {messages.map((mes) => (
                 <Message
-                  key={mes.id}
+                  id={mes.id}
                   text={mes.text}
                   photoURL={mes.photoURL}
                   displayName={mes.displayName}
                   createAt={mes.createAt}
+                  key22={mes.key}
+                  iv22={mes.iv}
                 />
               ))}
             </MessageListStyled>
